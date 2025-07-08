@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Double Click Screen Share</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body ondblclick="shareScreen()">
+  <video id="screen" autoplay playsinline muted></video>
+
+  <script>
+    async function shareScreen() {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            displaySurface: "window"
+          },
+          audio: false
+        });
+        document.getElementById("screen").srcObject = stream;
+      } catch (err) {
+        // Optional: console.log("User cancelled or error:", err);
+      }
+    }
+  </script>
+</body>
+</html>
