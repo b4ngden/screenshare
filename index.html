@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Double Click Screen Share</title>
+  <title>Double Click to Share Screen</title>
   <style>
     body {
       margin: 0;
@@ -11,6 +11,7 @@
       justify-content: center;
       align-items: center;
       user-select: none;
+      overflow: hidden;
     }
 
     video {
@@ -18,23 +19,81 @@
       max-height: 100%;
       border: none;
     }
+
+    /* Popup overlay */
+    #popup {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    #popup .content {
+      text-align: center;
+      background: #1a1a1a;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    #popup button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #popup button:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body ondblclick="shareScreen()">
   <video id="screen" autoplay playsinline muted></video>
 
+  <!-- Popup -->
+  <div id="popup">
+    <div class="content">
+      <div style="font-size: 22px; margin-bottom: 10px;">Double click to select the application to share.</div>
+      <button onclick="closePopup()">Oke</button>
+    </div>
+  </div>
+
   <script>
+    // Hanya tampilkan popup sekali saat load
+    window.addEventListener('load', () => {
+      const seen = sessionStorage.getItem('popupSeen');
+      if (seen) {
+        document.getElementById('popup').style.display = 'none';
+      }
+    });
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      sessionStorage.setItem('popupSeen', 'true');
+    }
+
     async function shareScreen() {
       try {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: {
-            displaySurface: "window"
-          },
+          video: { displaySurface: "window" },
           audio: false
         });
         document.getElementById("screen").srcObject = stream;
       } catch (err) {
-        // Optional: console.log("User cancelled or error:", err);
+        // User canceled or error occurred
       }
     }
   </script>
