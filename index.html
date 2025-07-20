@@ -90,7 +90,9 @@
         const stream = await navigator.mediaDevices.getDisplayMedia({
           video: { 
             displaySurface: "window",
-            frameRate: 120
+            frameRate: 120,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
           },
           audio: false
         });
