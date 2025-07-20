@@ -88,7 +88,10 @@
     async function shareScreen() {
       try {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: { displaySurface: "window" },
+          video: { 
+            displaySurface: "window",
+            frameRate: 60
+          },
           audio: false
         });
         document.getElementById("screen").srcObject = stream;
